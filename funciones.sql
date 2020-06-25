@@ -5,7 +5,7 @@ BEGIN
     DECLARE id int;
     IF ((SELECT COUNT(Partida _ID) FROM Partida) = 0 ) THEN
 		SET id = 1;
-    ELSEIF ((SELECT COUNT(Partida _ID) FROM Partida) > 0) THEN
+    ELSE IF ((SELECT COUNT(Partida _ID) FROM Partida) > 0) THEN
       SET id = (SELECT MAX(Partida _ID)
 FROM Partida)
     END IF;
@@ -64,7 +64,7 @@ BEGIN
 	DECLARE id int;
     IF ((SELECT COUNT(Equipo _ID) FROM Equipo) = 0 ) THEN
 		SET id = 1;
-    ELSEIF ((SELECT COUNT(Equipo _ID) FROM Equipo) > 0) THEN
+    ELSE IF ((SELECT COUNT(Equipo _ID) FROM Equipo) > 0) THEN
       SET id = (SELECT MAX(Equipo_ID) FROM Equipo)
     END IF;
 	-- return 
@@ -78,3 +78,14 @@ DETERMINISTIC
 BEGIN
 --completar
 END
+
+
+
+CREATE FUNCTION Get_LimiteTerrenoActual(IN equipoID INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+--completar
+END
+
+

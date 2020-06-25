@@ -18,22 +18,24 @@ END;
 
 
 --Tirar Burro
-CREATE PROCEDURE Tirar_Burro(IN equipoID INT,IN x1 INT, IN x2 INT)
+CREATE PROCEDURE Tirar_Burro(IN equipoID INT,IN x INT)
 BEGIN
     DECLARE y INT;
     DECLARE partidaID INT;
     DECLARE terrenoID INT;
-    IF (x1 > x2 OR x1 <= 0 OR x2 > 55)
+    
+    IF ( x <= 0 OR (x+4) > Get_LimiteTerrenoActual(equipoID))
         RAISE_APPLICATION_ERROR(-20001,"Las coordenadas no son correctas") ;
     END IF
 
+    SET partidaID = GetPartidaID(equipoID);
     SET terrenoID = Get_Terreno_ID(partidaID);
-    SET partidaID = GetPartidaID(IN equipoID INT);
+
 
     SET y = 1;
     WHILE y <= 15 DO
-        CALL Aniquilar_Gusanos(x1,x2,y,terrenoID );
-        CALL Borrar_Linea_Terreno(x1,x2,y,terrenoID );
+        CALL Aniquilar_Gusanos_De_la_linea(x,y,terrenoID);
+        CALL Borrar_Linea_Terreno(x,y,terrenoID);
     SET y = y + 1;
     END WHILE
     CALL Terminar_Turno_Manualmente(equipoID);
