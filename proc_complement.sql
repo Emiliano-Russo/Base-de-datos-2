@@ -1,6 +1,14 @@
 CREATE PROCEDURE Iniciar_Terreno (IN id INT)
 BEGIN
---completar
+	INSERT INTO Terreno_Tipo(Terreno_ID,TipoID)
+		VALUES (id,1);
+	CALL Crear_Terreno(id);
+END;
+
+
+CREATE PROCEDURE Crear_Terreno_Tipo_Uno (IN id INT)
+BEGIN
+--750 lineas de inserts
 END;
 
 CREATE PROCEDURE Inicializar_Equipos(IN IDPartida INT,IN cantPersonas INT)
@@ -19,37 +27,37 @@ BEGIN
 		VALUES (IDPartida, ultimo_equipoID +1); 
 		CALL Registrar_Equipo(ultimo_equipoID +1,segundos,cantPersonas > 0);
 		SET segundos = segundos +30;
-		END WHILE;
+	END WHILE;
 END
 
 CREATE PROCEDURE Registrar_Equipo(IN equipoID INT,IN segundos INT, IN Humano BOOLEAN,)
 BEGIN
 	DECLARE x INT;
-SET x = 1;
+	SET x = 1;
 
 	INSERT INTO Equipo(Equipo_ID, EnJuego, Control,TiempoTurno)
-		VALUES (equipoID, “NO”, ConversorBoolHumano(Humano),segundos);
+		VALUES (equipoID, "NO", ConversorBoolHumano(Humano),segundos);
 	
-WHILE x <= 30 DO
-	x = x+1;
-	INSERT INTO Equipo_Arma(Equipo_ID, Arma_ID)
-	VALUES (equipoID, 1);
-END WHILE;
-CALL Crear_GusanosParaEquipo(equipoID); --aca siguen recorriendo tablas
+	WHILE x <= 30 DO
+		x = x+1;
+		INSERT INTO Equipo_Arma(Equipo_ID, Arma_ID)
+		VALUES (equipoID, 1);
+	END WHILE;
+	CALL Crear_GusanosParaEquipo(equipoID); --aca siguen recorriendo tablas
 END;
 
 
 CREATE PROCEDURE Crear_GusanosParaEquipo(IN equipoID INT)
 BEGIN
-DECLARE x INT;
+	DECLARE x INT;
 	SET x = 1;
 	WHILE x <= 8 DO
-	DECLARE gusanoID = Ultimo_GusanoID()+1;
-	INSERT INTO Equipo_Gusanos( Equipo_ID, Gusano_ID)
-VALUES (equipoID,gusanoID );
-SET x = x + 1;
-	CALL RegistrarGusano(gusanoID);
-	ENDWHILE
+		DECLARE gusanoID = Ultimo_GusanoID()+1;
+		INSERT INTO Equipo_Gusanos( Equipo_ID, Gusano_ID)
+		VALUES (equipoID,gusanoID );
+		SET x = x + 1;
+		CALL RegistrarGusano(gusanoID);
+	END WHILE
 END;
 
 

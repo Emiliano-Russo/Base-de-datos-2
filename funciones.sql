@@ -6,8 +6,7 @@ BEGIN
     IF ((SELECT COUNT(Partida _ID) FROM Partida) = 0 ) THEN
 		SET id = 1;
     ELSE IF ((SELECT COUNT(Partida _ID) FROM Partida) > 0) THEN
-      SET id = (SELECT MAX(Partida _ID)
-FROM Partida)
+      SET id = (SELECT MAX(Partida _ID) FROM Partida)
     END IF;
 	-- return 
 	RETURN (id);
@@ -20,10 +19,10 @@ RETURNS INT
 DETERMINISTIC
 BEGIN
         DECLARE id int;
-        IF ((SELECT COUNT(Terreno _ID) FROM Terreno) = 0 ) THEN
+        IF ((SELECT COUNT(Terreno _ID) FROM Terreno_Tipo) = 0 ) THEN
             SET id = 1;
-        ELSE IF ((SELECT COUNT(Terreno _ID) FROM Terreno) > 0) THEN
-            SET id = (SELECT MAX(Terreno_ID) FROM Terreno)
+        ELSE IF ((SELECT COUNT(Terreno _ID) FROM Terreno_Tipo) > 0) THEN
+            SET id = (SELECT MAX(Terreno_ID) FROM Terreno_Tipo)
         END IF;
         -- return 
         RETURN (id);

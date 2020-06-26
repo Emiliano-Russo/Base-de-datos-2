@@ -10,9 +10,9 @@ BEGIN
     SET PartidaID = Get_Ultima_IDPartida()+1;
 
     INSERT INTO Partida(Partida ID,config_ID,Terreno _ID,Estado)
-    VALUES (PartidaID ,nro _config,terrenoID,’Sin Empezar’);
+    VALUES (PartidaID ,nro _config,terrenoID,"Sin Empezar");
     CALL Iniciar_Terreno(terrenoID);
-    CALL Inicializar_Equipos(PartidaID,cantPersonas) 
+    CALL Inicializar_Equipos(PartidaID,cantPersonas); 
     CALL Iniciar_MarcadorPartida(idPartida);
 END;
 
@@ -25,12 +25,11 @@ BEGIN
     DECLARE terrenoID INT;
     
     IF ( x <= 0 OR (x+4) > Get_LimiteTerrenoActual(equipoID))
-        RAISE_APPLICATION_ERROR(-20001,"Las coordenadas no son correctas") ;
+        RAISE_APPLICATION_ERROR(-20001,"Las coordenadas no son correctas");
     END IF
 
     SET partidaID = GetPartidaID(equipoID);
     SET terrenoID = Get_Terreno_ID(partidaID);
-
 
     SET y = 1;
     WHILE y <= 15 DO
