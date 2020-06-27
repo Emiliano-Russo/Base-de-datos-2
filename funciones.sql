@@ -75,16 +75,29 @@ CREATE FUNCTION GetPartidaID(IN equipoID INT)
 RETURNS INT
 DETERMINISTIC
 BEGIN
---completar
+  DECLARE ID INT;
+  SET ID = SELECT Partida_ID FROM Partida_Equipo
+            WHERE Equipo_ID = equipoID;
+
+  return ID;
 END
 
 
 
-CREATE FUNCTION Get_LimiteTerrenoActual(IN equipoID INT)
+CREATE FUNCTION Get_LimiteXTerrenoActual(IN equipoID INT)
 RETURNS INT
 DETERMINISTIC
 BEGIN
---completar
+
+DECLARE Ancho INT;
+
+SET Ancho = SELECT Ancho FROM Prototipo p, Terreno t, Terreno_Tipo tt, Partida par--Especificar todas las tablas en uso
+            WHERE TipoID = tt.TipoID
+            AND tt.Terreno_ID = par.Terreno_ID
+            AND par.Partida_ID = GeTPartidaID(equipoID);
+
+RETURN  Ancho;
+
 END
 
 
@@ -92,7 +105,13 @@ CREATE FUNCTION Es_Turno_De(IN equipoID INT)
 RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
---completar
+  DECLARE Tiempo BOOLEAN;
+  SET Tiempo = SELECT Tiempo_Turno FROM Equipo
+                WHERE Equipo_ID = equipoID;
+  IF (Tiempo > 0 AND Tiempo <= 30)
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
 END
 
 
@@ -101,6 +120,17 @@ RETURNS INT
 DETERMINISTIC
 BEGIN
 --completar
+END
+
+
+CREATE FUNCTION GetTerrenoID(in partidaID INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE ID INT;
+
+    SET ID = SELECT Terreno_ID FROM Partida 
+            WHERE Partida_ID = partidaID;
 END
 
 

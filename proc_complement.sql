@@ -222,9 +222,10 @@ BEGIN
 		CALL Terminar_PartidaTerminar_Partida(partidaID);
 END
 
-CREATE PROCEDURE Borrar_Linea_Terreno(IN x INT,IN y INT,IN terrenoID INT)
+CREATE PROCEDURE Borrar_Linea_Terreno_Ancho_Cinco(IN x INT,IN y INT,IN terrenoID INT)
 BEGIN
 	DECLARE i INT;
+	SET i = 0;
 	WHILE i <= 4 DO
 		SET i = i+1;
 		UPDATE Terreno
