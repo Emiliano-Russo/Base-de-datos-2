@@ -59,10 +59,10 @@ BEGIN
                         WHERE Cord_x = X
                         AND Cord_y = Y
                         AND Terreno_ID = terrenoID;)
-    DECLARE celda;
+    DECLARE celda_objetivo;
     DECLARE celda_abajo;
 
-    SET celda = (SELECT Celda 
+    SET celda_objetivo = (SELECT Celda 
                 FROM terreno 
                 WHERE 
                 Terreno_ID = terrenoID
@@ -70,7 +70,7 @@ BEGIN
                 AND Cord_y = posFinalY;)
     
 
-    IF (celda != '*')
+    IF (celda_objetivo != '*')
         ROLLBACK
         RAISE_APPLICATION_ERROR('No se puede mover a un gusano en espacios ocupados');        
     END IF
@@ -84,7 +84,7 @@ BEGIN
                 AND Cord_y = posFinalY-1;
 
     IF (celda_abajo = '*')
-        CALL Salto_Bungee(gusanoID,posFinalX,posFinalY);    
+        CALL Salto_Bungee(gusanoID,posFinalX,posFinalY-1);    
     ELSE IF (celda_abajo = 'W' OR celda_abajo = 'R' OR celda_abajo ='L' OR celda_abajo='H')
         ROLLBACK
         LEAVE pr;
@@ -93,13 +93,12 @@ BEGIN
         COMMIT
     ELSE IF (celda_abajo = 'B')
         CALL Eliminar_Gusano(X,Y,terrenoID) 
-        CALL Explotar_barril(posFinalX, posFinalY-1);  
+        CALL Explotar_barril(posFinalX, posFinalY-1,terrenoID);  
         COMMIT
     ELSE IF (celda_abajo = 'T' OR celda_abajo='P')
         CALL Mover_Gusano(gusanoID,posFinalX,posfinalY);
         COMMIT
     END IF;
-    	--checkear si no era el penultimo equipo sin vida, donde lo hacemos?
     /*
     Cuando se actualiza la posición de un gusano:	
     -Controlar que en esa celda haya aire

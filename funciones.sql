@@ -89,14 +89,14 @@ RETURNS INT
 DETERMINISTIC
 BEGIN
 
-DECLARE Ancho INT;
+  DECLARE Ancho INT;
 
-SET Ancho = SELECT Ancho FROM Prototipo p, Terreno t, Terreno_Tipo tt, Partida par--Especificar todas las tablas en uso
-            WHERE TipoID = tt.TipoID
-            AND tt.Terreno_ID = par.Terreno_ID
-            AND par.Partida_ID = GeTPartidaID(equipoID);
+  SET Ancho = SELECT Ancho FROM Prototipo p, Terreno t, Terreno_Tipo tt, Partida par--Especificar todas las tablas en uso
+              WHERE TipoID = tt.TipoID
+              AND tt.Terreno_ID = par.Terreno_ID
+              AND par.Partida_ID = GeTPartidaID(equipoID);
 
-RETURN  Ancho;
+  RETURN  Ancho;
 
 END
 
@@ -119,8 +119,13 @@ CREATE FUNCTION GetTerrenoID_delGusano(IN gusanoID INT)
 RETURNS INT
 DETERMINISTIC
 BEGIN
---completar
-END
+  DECLARE ID INT;
+
+  SET ID = SELECT Terreno_ID FROM Partida p , Partida_Equipo pe, Equipo_Gusanos
+            WHERE p.Partida_ID = pe.Equipo_ID
+            AND pe.Gusano_ID =gusanoID;
+  RETURN ID;
+  END
 
 
 CREATE FUNCTION GetTerrenoID(in partidaID INT)

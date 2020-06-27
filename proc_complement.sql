@@ -237,20 +237,41 @@ BEGIN
 	END WHILE
 END;
 
-CREATE PROCEDURE Explotar_barril(IN posX INT, IN posY INT)
+CREATE PROCEDURE Explotar_barril(IN posX INT, IN posY INT,IN terrenoID INT)
 BEGIN
-/*
-completar:
--Verificar que en esa posición hay una ‘B’
--identifica los gusanos afectados por la explosion y actualiza sus datos.
--modifica el terreno del radio explosivo.
-*/
+	UPDATE Terreno SET Celda = '*'
+	WHERE Terreno_ID = terrenoID
+	AND Cord_x = posX
+	AND Cord y = posY;
 END;
 
 
-CREATE PROCEDURE Mover_Gusano(IN gusanoID INT ,IN  X INT, INT Y INT );
+CREATE PROCEDURE Mover_Gusano(IN gusanoID INT ,IN  XFinal INT, INT YFinal INT );
 BEGIN
---completar(NO HAY QUE VERIFICAR NADA, solo moverlo)
+
+	DECLARE XActual = (SELECT POS_X FROM Gusano WHERE Gusano_ID = gusanoID);
+    DECLARE YActual = (SELECT POS_Y FROM Gusano WHERE Gusano_ID = gusanoID);
+	DECLARE terrenoID = GetTerrenoID_delGusano(gusanoID);
+	DECLARE letra VarChar(2);
+
+	UPDATE Gusano SET POS_X = XFinal , POS_Y = YFinal
+	WHERE Gusano_ID = gusanoID;
+
+	SET letra = SELECT Celda FROM Terreno
+				WHERE Terreno_ID = terrenoID 
+				AND  Cord_x = XActual 
+				AND Cord_y = YActual;
+
+	UPDATE Terreno SET Celda = '*'
+	WHERE Terreno_ID = terrenoID 
+	AND  Cord_x = XActual 
+	AND Cord_y = YActual;
+
+	UPDATE Terreno SET Celda = letra
+	WHERE Terreno_ID = terrenoID
+	AND Cord_x = XFinal
+	AND Cord_y = YFinal;
+
 END;
 
 

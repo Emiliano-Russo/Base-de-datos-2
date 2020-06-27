@@ -16,7 +16,7 @@ Cuando se hace update en la tabla Equipo de la columna ‘control’ exponer un 
 
 Cuando se hace update de la tabla Equipo_Arma de cualquier valor, exponer un error!
 
-Cuando se hacer un update de la tabla Equipo_Gusano de cualquier valor, exponer un error!
+Cuando se hacer un update de la tabla Equipo_Gusanos de cualquier valor, exponer un error!
 
 El caracter agua ‘A’ en el terreno es inmodificable, verificar eso
 */
