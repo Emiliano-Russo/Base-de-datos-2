@@ -61,10 +61,10 @@ RETURNS INT
 DETERMINISTIC
 BEGIN
 	DECLARE id int;
-    IF ((SELECT COUNT(Equipo _ID) FROM Equipo) = 0 ) THEN
+    IF ((SELECT COUNT(Equipo _ID) FROM Partida_Equipo) = 0 ) THEN
 		SET id = 1;
-    ELSE IF ((SELECT COUNT(Equipo _ID) FROM Equipo) > 0) THEN
-      SET id = (SELECT MAX(Equipo_ID) FROM Equipo)
+    ELSE IF ((SELECT COUNT(Equipo _ID) FROM Partida_Equipo) > 0) THEN
+      SET id = (SELECT MAX(Equipo_ID) FROM Partida_Equipo)
     END IF;
 	-- return 
 	RETURN (id);
@@ -86,5 +86,22 @@ DETERMINISTIC
 BEGIN
 --completar
 END
+
+
+CREATE FUNCTION Es_Turno_De(IN equipoID INT)
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+--completar
+END
+
+
+CREATE FUNCTION GetTerrenoID_delGusano(IN gusanoID INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+--completar
+END
+
 
 
