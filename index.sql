@@ -112,13 +112,16 @@ BEGIN
     END;
 
 --Terminar Partida
-CREATE PROCEDURE Terminar_Partida (IN PartidaID INT)
+CREATE PROCEDURE Terminar_Partida(IN PartidaID INT)
 BEGIN
 /*
 completar:
 -Mostrar resumen del marcador de la partida
 -Eliminar todo lo asociado con esta partida
 */
+
+DELETE FROM Partida
+WHERE PrimaryKey = PartidaID;
 END;
 
 
