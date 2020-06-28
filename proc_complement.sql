@@ -195,14 +195,15 @@ CREATE PROCEDURE Eliminar_Gusano(IN x INT,IN y INT,IN terrenoID INT)
 BEGIN
 
 	UPDATE Gusano 
-	SET Salud = 0 , POS_X = null , POS_Y = null;
+	SET Salud = 0 , POS_X = null , POS_Y = null
 	WHERE
 	Gusano.GusanoID = Equipo_Gusanos.Gusano_ID
-	AND Gusano.POS_X = x;
-	AND Gusano.POS_Y = y;
+	AND Gusano.POS_X = x
+	AND Gusano.POS_Y = y
 	AND Equipo_Gusanos.Equipo_ID = Partida_Equipo.Equipo_ID
 	AND Partida_Equipo.Partida_ID = Partida.Partida_ID
 	AND Partida.Terreno_ID = terrenoID;
+	
 	UPDATE Terreno SET Celda = '*' WHERE Cord_x = x AND Cord_y = y AND Terreno_ID = terrenoID;
 
 	DECLARE partidaID = SELECT Partida_ID FROM Partida p, Terreno_Tipo tt
@@ -228,6 +229,8 @@ BEGIN
 	SET i = 0;
 	WHILE i <= 4 DO
 		SET i = i+1;
+		IF ((SELECT Celda FROM Terreno WHERE Terreno_ID = terrenoID AND Cord_x = x AND Cord_y = y) = 'A')
+			CONTINUE;
 		UPDATE Terreno
 		SET celda = '*'
 		WHERE 

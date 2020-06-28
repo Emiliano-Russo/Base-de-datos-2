@@ -128,7 +128,7 @@ BEGIN
   END
 
 
-CREATE FUNCTION GetTerrenoID(in partidaID INT)
+CREATE FUNCTION GetTerrenoID(IN partidaID INT)
 RETURNS INT
 DETERMINISTIC
 BEGIN
@@ -137,6 +137,22 @@ BEGIN
     SET ID = SELECT Terreno_ID FROM Partida 
             WHERE Partida_ID = partidaID;
 END
+
+
+CREATE FUNCTION PartidaEnCurso(IN partidaID INT)
+RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+  DECLARE estado VarChar('15');
+  SET estado = SELECT estado FROM Partida 
+              WHERE Partida_ID = partidaID;
+  IF (estado = 'En curso')
+    RETURN TRUE;
+  ELSE 
+    RETURN FALSE;
+  END IF;
+
+END;
 
 
 
