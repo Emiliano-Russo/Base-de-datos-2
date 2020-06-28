@@ -90,14 +90,14 @@ BEGIN
         LEAVE pr;
     ELSE IF (celda_abajo = 'A')
         CALL Eliminar_Gusano(X,Y,terrenoID);
-        COMMIT
+        
     ELSE IF (celda_abajo = 'B')
         CALL Eliminar_Gusano(X,Y,terrenoID) 
         CALL Explotar_barril(posFinalX, posFinalY-1,terrenoID);  
-        COMMIT
+        
     ELSE IF (celda_abajo = 'T' OR celda_abajo='P')
         CALL Mover_Gusano(gusanoID,posFinalX,posfinalY);
-        COMMIT
+        
     END IF;
     /*
     Cuando se actualiza la posición de un gusano:	
@@ -109,6 +109,7 @@ BEGIN
         -Si abajo hay un gusano se cancela la transaccion
     */
     CALL Terminar_Turno_Manualmente(equipoID);
+    COMMIT
     END;
 
 --Terminar Partida
