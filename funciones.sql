@@ -1,13 +1,13 @@
-
+DELIMITER //
 CREATE FUNCTION Get_Ultima_IDPartida() 
 RETURNS INT
 DETERMINISTIC
 BEGIN
     DECLARE id INT;
-    IF ((SELECT COUNT(´Partida_ID´) FROM Partida) = 0 ) THEN
+    IF ((SELECT COUNT(Partida_ID) FROM partida) = 0 ) THEN
 		SET id = 1;
-    ELSEIF ((SELECT COUNT(´Partida_ID´) FROM partida) > 0) THEN
-      SET id = (SELECT COUNT(´Partida_ID´) FROM partida);
+    ELSEIF ((SELECT COUNT(Partida_ID) FROM partida) > 0) THEN
+      SET id = (SELECT COUNT(Partida_ID) FROM partida);
     END IF;
     RETURN id;
 END; //
@@ -32,10 +32,10 @@ RETURNS INT
 DETERMINISTIC
 BEGIN
         DECLARE id INT;
-        IF ((SELECT COUNT(´Terreno_ID´) FROM terreno_tipo) = 0 ) THEN
+        IF ((SELECT COUNT(Terreno_ID) FROM terreno_tipo) = 0 ) THEN
             SET id = 1;
-        ELSEIF ((SELECT COUNT(´Terreno_ID´) FROM terreno_tipo) > 0) THEN
-            SET id = (SELECT COUNT(´Terreno_ID´) FROM terreno_tipo);
+        ELSEIF ((SELECT COUNT(Terreno_ID) FROM terreno_tipo) > 0) THEN
+            SET id = (SELECT COUNT(Terreno_ID) FROM terreno_tipo);
         END IF;
         RETURN id;
 END; //
@@ -47,10 +47,10 @@ RETURNS INT
 DETERMINISTIC
 BEGIN
     DECLARE id INT;
-    IF ((SELECT COUNT(´Gusano_ID´) FROM gusano) = 0 ) THEN
+    IF ((SELECT COUNT(Gusano_ID) FROM gusano) = 0 ) THEN
 		SET id = 1;
-    ELSEIF ((SELECT COUNT(´Gusano_ID´) FROM gusano) > 0) THEN
-      SET id = (SELECT COUNT(´Gusano_ID´) FROM gusano);
+    ELSEIF ((SELECT COUNT(Gusano_ID) FROM gusano) > 0) THEN
+      SET id = (SELECT COUNT(Gusano_ID) FROM gusano);
     END IF;
     RETURN id;
 END; //
@@ -62,10 +62,10 @@ RETURNS INT
 DETERMINISTIC
 BEGIN
     DECLARE id INT;
-    IF ((SELECT COUNT(´Equipo_ID´) FROM partida_equipo) = 0 ) THEN
+    IF ((SELECT COUNT(Equipo_ID) FROM partida_equipo) = 0 ) THEN
 		SET id = 1;
-    ELSEIF ((SELECT COUNT(´Equipo_ID´) FROM partida_equipo) > 0) THEN
-      SET id = (SELECT MAX(´Equipo_ID´) FROM partida_equipo);
+    ELSEIF ((SELECT COUNT(Equipo_ID) FROM partida_equipo) > 0) THEN
+      SET id = (SELECT MAX(Equipo_ID) FROM partida_equipo);
     END IF;
 	RETURN id;
 END; //
@@ -77,8 +77,8 @@ RETURNS INT
 DETERMINISTIC
 BEGIN
   DECLARE ID INT;
-  SET ID = (SELECT ´Partida_ID´ FROM partida_equipo
-            WHERE ´Equipo_ID´ = equipoID);
+  SET ID = (SELECT Partida_ID FROM partida_equipo
+            WHERE Equipo_ID = equipoID);
 
   RETURN ID;
 END; //
@@ -92,8 +92,8 @@ BEGIN
 
   DECLARE Ancho INT;
 
-  SET Ancho = (SELECT ´Ancho´ FROM prototipo p, terreno t, terreno_tipo tt, partida par
-              WHERE ´TipoID´ = tt.TipoID
+  SET Ancho = (SELECT Ancho FROM prototipo p, terreno t, terreno_tipo tt, partida par
+              WHERE TipoID = tt.TipoID
               AND tt.Terreno_ID = par.Terreno_ID
               AND par.Partida_ID = GeTPartidaID(equipoID));
 
@@ -108,8 +108,8 @@ RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
   DECLARE Tiempo BOOLEAN;
-  SET Tiempo = (SELECT ´Tiempo_Turno´ FROM equipo
-                WHERE ´Equipo_ID´ = equipoID);
+  SET Tiempo = (SELECT Tiempo_Turno FROM equipo
+                WHERE Equipo_ID = equipoID);
   IF (Tiempo > 0 AND Tiempo <= 30)
     THEN RETURN TRUE;
   ELSE
@@ -125,7 +125,7 @@ DETERMINISTIC
 BEGIN
   DECLARE ID INT;
 
-  SET ID = (SELECT ´Terreno_ID´ FROM partida p , partida_Equipo pe, equipo_gusanos
+  SET ID = (SELECT Terreno_ID FROM partida p , partida_Equipo pe, equipo_gusanos
             WHERE p.Partida_ID = pe.Equipo_ID
             AND pe.Gusano_ID = gusanoID);
 RETURN ID;
@@ -139,7 +139,7 @@ DETERMINISTIC
 BEGIN
     DECLARE ID INT;
 
-    SET ID = (SELECT ´Terreno_ID´ FROM partida 
+    SET ID = (SELECT Terreno_ID FROM partida 
             WHERE Partida_ID = partidaID);
     RETURN ID;
 END; //
@@ -151,7 +151,7 @@ RETURNS BOOLEAN
 DETERMINISTIC
 BEGIN
   DECLARE estado VARCHAR(15);
-  SET estado = (SELECT ´Estado´ FROM partida 
+  SET estado = (SELECT Estado FROM partida 
               WHERE Partida_ID = partidaID);
   IF (estado = 'EnCurso')
     THEN RETURN TRUE;

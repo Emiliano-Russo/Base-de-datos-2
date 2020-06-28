@@ -1,6 +1,4 @@
--- Aqui estan los procedimientos principales, por asi decirlo publicos
-
---perparar_partida
+DELIMITER //
 CREATE PROCEDURE Inicializar_Partida (IN nro_config INT, IN cantPersonas INT)
 BEGIN
     DECLARE terrenoID INT;
@@ -9,93 +7,108 @@ BEGIN
     SET terrenoID = Get_UltimoTerrenoID()+1;
     SET PartidaID = Get_Ultima_IDPartida()+1;
 
-    INSERT INTO Partida(Partida ID, Config_ID, Terreno _ID, Estado)
-    VALUES (PartidaID , nro _config, terrenoID,"Sin Empezar");
+    INSERT INTO partida (Partida_ID, Config_ID, Terreno_ID, Estado)
+    VALUES (PartidaID , nro_config, terrenoID,"Sin Empezar");
+    
     CALL Iniciar_Terreno_Tipo_Uno(terrenoID);
     CALL Inicializar_Equipos(PartidaID,cantPersonas); 
     CALL Iniciar_MarcadorPartida(idPartida);
-END;
+END; //
+DELIMITER ;
 
-
---Tirar Burro
-CREATE PROCEDURE Tirar_Burro(IN equipoID INT,IN x INT)
+ 
+DELIMITER //
+CREATE PROCEDURE Tirar_Burro(IN equipoID INT,IN X INT)
 BEGIN
-    IF (NOT Es_Turno_De(equipoID))
-      RAISE_APPLICATION_ERROR(-20001,"No es el turno del equipo seleccionado");
-    END IF
 
-    DECLARE y INT;
+    DECLARE Y INT;
     DECLARE partidaID INT;
     DECLARE terrenoID INT;
-    
-    IF (x <= 0 OR (x+4) > Get_LimiteXTerrenoActual(equipoID))
-        RAISE_APPLICATION_ERROR(-20001,"Las coordenadas no son correctas");
-    END IF
+    	
+
+    IF (NOT Es_Turno_De(equipoID)) THEN 
+      signal SQLSTATE '45009' SET message_text = 'No es el turno del equipo seleccionado';
+    END IF;
+
+    IF (X <= 0 OR (X+4) > Get_LimiteXTerrenoActual(equipoID)) THEN
+        signal SQLSTATE '45010' SET message_text = 'Las coordenadas no son correctas';
+    END IF;
 
     SET partidaID = GetPartidaID(equipoID);
     SET terrenoID = GetTerrenoID(partidaID);
 
-    SET y = 1;
-    WHILE y <= 15 DO
-        CALL Aniquilar_Gusanos_De_la_linea(x,y,terrenoID);
-        CALL Borrar_Linea_Terreno_Ancho_Cinco(x,y,terrenoID);
-        SET y = y + 1;
-    END WHILE
+    SET Y = 1;
+    WHILE Y <= 15 DO
+        CALL Aniquilar_Gusanos_De_la_linea(X,Y,terrenoID);
+        CALL Borrar_Linea_Terreno_Ancho_Cinco(X,Y,terrenoID);
+        SET Y = Y + 1;
+    END WHILE;
     CALL Terminar_Turno_Manualmente(equipoID);
-END;
+END; //
+DELIMITER ;
 
 
---Salto bungee
+
+DELIMITER //
 CREATE PROCEDURE Salto_Bungee(IN gusanoID INT,IN posFinalX INT, IN posFinalY INT)
-BEGIN
-    START TRANSACTION 
+pr: BEGIN
+    DECLARE X INT;
+    DECLARE Y INT;
+    DECLARE terernoID INT;
+    DECLARE caracter_gusano VARCHAR(1);
 
-    DECLARE terernoID = GetTerrenoID_delGusano(gusanoID);
-    DECLARE X = (SELECT POS_X FROM Gusano WHERE Gusano_ID = gusanoID);
-    DECLARE Y = (SELECT POS_Y FROM Gusano WHERE Gusano_ID = gusanoID);
-
-    DECLARE caracter_gusano = (SELECT Celda 
+    DECLARE celda_objetivo VARCHAR(1);
+    DECLARE celda_abajo VARCHAR(1);
+    
+    START TRANSACTION; 
+    
+    SET terernoID = GetTerrenoID_delGusano(gusanoID);
+    
+    SET X = (SELECT POS_X FROM Gusano WHERE Gusano_ID = gusanoID);
+    SET Y = (SELECT POS_Y FROM Gusano WHERE Gusano_ID = gusanoID);
+    
+    SET caracter_gusano = (SELECT Celda 
                         FROM Terreno 
                         WHERE Cord_x = X
                         AND Cord_y = Y
-                        AND Terreno_ID = terrenoID;)
-    DECLARE celda_objetivo;
-    DECLARE celda_abajo;
-
+                        AND Terreno_ID = terrenoID);
+   
     SET celda_objetivo = (SELECT Celda 
                 FROM terreno 
                 WHERE 
                 Terreno_ID = terrenoID
                 AND Cord_x = posFinalX
-                AND Cord_y = posFinalY;)
+                AND Cord_y = posFinalY);
     
 
-    IF (celda_objetivo != '*')
-        ROLLBACK
-        RAISE_APPLICATION_ERROR('No se puede mover a un gusano en espacios ocupados');        
-    END IF
+    IF (celda_objetivo != '*') THEN
+        
+        signal SQLSTATE '45011' SET message_text = 'No se puede mover a un gusano en espacios ocupados'; 
+        ROLLBACK; 
+ 
+    END IF;
 
 
-    SET celda_abajo = SELECT Celda 
+    SET celda_abajo = (SELECT Celda 
                 FROM terreno 
                 WHERE 
                 Terreno_ID = terrenoID
                 AND Cord_x = posFinalX
-                AND Cord_y = posFinalY-1;
+                AND Cord_y = posFinalY-1);
 
-    IF (celda_abajo = '*')
+    IF (celda_abajo = '*') THEN
         CALL Salto_Bungee(gusanoID,posFinalX,posFinalY-1);    
-    ELSE IF (celda_abajo = 'W' OR celda_abajo = 'R' OR celda_abajo ='L' OR celda_abajo='H')
-        ROLLBACK
+    ELSEIF (celda_abajo = 'W' OR celda_abajo = 'R' OR celda_abajo ='L' OR celda_abajo='H') THEN 
+        ROLLBACK;
         LEAVE pr;
-    ELSE IF (celda_abajo = 'A')
+    ELSEIF (celda_abajo = 'A') THEN
         CALL Eliminar_Gusano(X,Y,terrenoID);
         
-    ELSE IF (celda_abajo = 'B')
-        CALL Eliminar_Gusano(X,Y,terrenoID) 
+    ELSEIF (celda_abajo = 'B') THEN 
+        CALL Eliminar_Gusano(X,Y,terrenoID); 
         CALL Explotar_barril(posFinalX, posFinalY-1,terrenoID);  
         
-    ELSE IF (celda_abajo = 'T' OR celda_abajo='P')
+    ELSEIF (celda_abajo = 'T' OR celda_abajo='P') THEN
         CALL Mover_Gusano(gusanoID,posFinalX,posfinalY);
         
     END IF;
@@ -109,20 +122,6 @@ BEGIN
         -Si abajo hay un gusano se cancela la transaccion
     */
     CALL Terminar_Turno_Manualmente(equipoID);
-    COMMIT
-    END;
-
---Terminar Partida
-CREATE PROCEDURE Terminar_Partida(IN PartidaID INT)
-BEGIN
-/*
-completar:
--Mostrar resumen del marcador de la partida
--Eliminar todo lo asociado con esta partida
-*/
-
-DELETE FROM Partida
-WHERE PrimaryKey = PartidaID;
-END;
-
-
+    COMMIT;
+END; //
+DELIMITER ;
