@@ -1,6 +1,8 @@
 DELIMITER //
 CREATE PROCEDURE Inicializar_Partida (IN nro_config INT, IN cantPersonas INT)
 BEGIN
+    START TRANSACTION; 
+
     DECLARE terrenoID INT;
     DECLARE PartidaID INT;
 
@@ -13,6 +15,8 @@ BEGIN
     CALL Iniciar_Terreno_Tipo_Uno(terrenoID);
     CALL Inicializar_Equipos(PartidaID,cantPersonas); 
     CALL Iniciar_MarcadorPartida(idPartida);
+
+    COMMIT;
 END; //
 DELIMITER ;
 
@@ -20,6 +24,8 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE Tirar_Burro(IN equipoID INT,IN X INT)
 BEGIN
+
+    START TRANSACTION; 
 
     DECLARE Y INT;
     DECLARE partidaID INT;
@@ -44,6 +50,7 @@ BEGIN
         SET Y = Y + 1;
     END WHILE;
     CALL Terminar_Turno_Manualmente(equipoID);
+    COMMIT;
 END; //
 DELIMITER ;
 

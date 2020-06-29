@@ -255,7 +255,7 @@ BEGIN
 	SET i = 0;
 	WHILE i <= 4 DO
 		SET i = i+1;
-		IF ((SELECT Celda FROM Terreno WHERE Terreno_ID = terrenoID AND Cord_x = X AND Cord_y = Y) = 'A') THEN
+		IF ((SELECT Celda FROM Terreno WHERE Terreno_ID = terrenoID AND Cord_x = X AND Cord_y = Y) != 'A') THEN
 		UPDATE Terreno
 		SET celda = '*'
 		WHERE 
