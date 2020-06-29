@@ -16,7 +16,7 @@ CREATE TABLE Terreno(
 Terreno_ID INT(8) NOT NULL REFERENCES Terreno_Tipo(Terreno_ID),
 Cord_X INT(3) NOT NULL,
 Cord_Y INT(3) NOT NULL,
-Celda VARCHAR(1) NOT NULL CHECK(Celda IN (‘A’,’T’,’*’,’P’,’B’,‘A’,’W’,’R’,’L’,’H’)),
+Celda VARCHAR(1) NOT NULL CHECK(Celda IN (‘A’,’T’,’.’,’P’,’B’,‘A’,’W’,’R’,’L’,’H’)),
 PRIMARY KEY (Terreno_ID, Cord_X, Cord_Y)
 );
 

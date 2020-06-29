@@ -88,7 +88,7 @@ pr: BEGIN
                 AND Cord_y = posFinalY);
     
 
-    IF (celda_objetivo != '*') THEN
+    IF (celda_objetivo != '.') THEN
         
         signal SQLSTATE '45011' SET message_text = 'No se puede mover a un gusano en espacios ocupados'; 
         ROLLBACK; 
@@ -103,7 +103,7 @@ pr: BEGIN
                 AND Cord_x = posFinalX
                 AND Cord_y = posFinalY-1);
 
-    IF (celda_abajo = '*') THEN
+    IF (celda_abajo = '.') THEN
         CALL Salto_Bungee(gusanoID,posFinalX,posFinalY-1);    
     ELSEIF (celda_abajo = 'W' OR celda_abajo = 'R' OR celda_abajo ='L' OR celda_abajo='H') THEN 
         ROLLBACK;

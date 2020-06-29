@@ -152,7 +152,7 @@ BEGIN
 					WHERE Terreno_ID = terrenoID 
 					AND Cord_Y = Y
 					AND Cord_X = X);
-		IF (celda = '*')
+		IF (celda = '.')
 			THEN SET lugarEncontrado = TRUE;
 		END IF;
 	END WHILE;
@@ -223,7 +223,7 @@ BEGIN
 	AND Partida_Equipo.Partida_ID = Partida.Partida_ID
 	AND Partida.Terreno_ID = terrenoID;
 	
-	UPDATE Terreno SET Celda = '*' WHERE Cord_x = X AND Cord_y = Y AND Terreno_ID = terrenoID;
+	UPDATE Terreno SET Celda = '.' WHERE Cord_x = X AND Cord_y = Y AND Terreno_ID = terrenoID;
 
 	SET partidaID = (SELECT Partida_ID FROM partida p, terreno_tipo tt
 						WHERE p.Partida_ID = tt.Terreno_ID 
@@ -257,7 +257,7 @@ BEGIN
 		SET i = i+1;
 		IF ((SELECT Celda FROM Terreno WHERE Terreno_ID = terrenoID AND Cord_x = X AND Cord_y = Y) != 'A') THEN
 		UPDATE Terreno
-		SET celda = '*'
+		SET celda = '.'
 		WHERE 
 			Terreno_ID = terrenoID
 			AND Cord_x = X+i
@@ -271,7 +271,7 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE Explotar_barril(IN posX INT, IN posY INT,IN terrenoID INT)
 BEGIN
-	UPDATE terreno SET Celda = '*'
+	UPDATE terreno SET Celda = '.'
 	WHERE Terreno_ID = terrenoID
 	AND Cord_X = posX
 	AND Cord_Y = posY;
@@ -298,7 +298,7 @@ BEGIN
 				AND  Cord_X = XActual 
 				AND Cord_Y = YActual);
 
-	UPDATE Terreno SET Celda = '*'
+	UPDATE Terreno SET Celda = '.'
 	WHERE Terreno_ID = terrenoID 
 	AND  Cord_X = XActual 
 	AND Cord_Y = YActual;
